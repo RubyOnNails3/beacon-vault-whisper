@@ -1,15 +1,36 @@
-import { useState } from "react"
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
+import { useState, useEffect } from "react"
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, usePublicClient, useWalletClient } from 'wagmi'
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Shield, Lock, Send, ArrowLeft } from "lucide-react"
+import { Zap, Lock, Send, ArrowLeft } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
-import { contractConfig, REPORT_CATEGORIES, SEVERITY_LEVELS } from "@/lib/contracts"
+import { BEACON_VAULT_WHISPER_CONTRACT_ADDRESS, BEACON_VAULT_WHISPER_ABI } from "@/lib/contracts"
 import { encryptSeverity, encryptCategory, encryptReportContent, validateIPFSHash } from "@/lib/fhe-utils"
+
+const REPORT_CATEGORIES = {
+  "1": "Financial Misconduct",
+  "2": "Governance Violation", 
+  "3": "Security Breach",
+  "4": "Code of Conduct",
+  "5": "Resource Misuse",
+  "6": "Conflict of Interest",
+  "7": "Data Privacy",
+  "8": "Regulatory Non-compliance",
+  "9": "Internal Fraud",
+  "10": "Other"
+}
+
+const SEVERITY_LEVELS = {
+  "1": "Low - Minor Issue",
+  "2": "Medium - Moderate Concern", 
+  "3": "High - Serious Issue",
+  "4": "Critical - Major Violation",
+  "5": "Emergency - Immediate Action Required"
+}
 
 interface ReportFormProps {
   onBack: () => void
@@ -25,6 +46,8 @@ export function ReportForm({ onBack }: ReportFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   
   const { address, isConnected } = useAccount()
+  const publicClient = usePublicClient()
+  const { data: walletClient } = useWalletClient()
   const { writeContract, data: hash, isPending, error } = useWriteContract()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
     hash,
@@ -34,7 +57,7 @@ export function ReportForm({ onBack }: ReportFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!isConnected) {
+    if (!isConnected || !publicClient || !walletClient) {
       toast({
         title: "Wallet Not Connected",
         description: "Please connect your wallet to submit a report.",
@@ -71,13 +94,13 @@ export function ReportForm({ onBack }: ReportFormProps) {
         Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60)
 
       // Encrypt sensitive data using FHE
-      const encryptedSeverity = encryptSeverity(parseInt(severity))
-      const encryptedCategory = encryptCategory(parseInt(category))
+      const encryptedSeverity = await encryptSeverity(parseInt(severity), walletClient, publicClient)
+      const encryptedCategory = await encryptCategory(parseInt(category), walletClient, publicClient)
 
       // Submit to contract
       writeContract({
-        address: contractConfig.address,
-        abi: contractConfig.abi,
+        address: BEACON_VAULT_WHISPER_CONTRACT_ADDRESS,
+        abi: BEACON_VAULT_WHISPER_ABI,
         functionName: 'submitWhistleblowerReport',
         args: [
           encryptedSeverity,
@@ -99,32 +122,36 @@ export function ReportForm({ onBack }: ReportFormProps) {
   }
 
   // Handle transaction success
-  if (isSuccess) {
-    toast({
-      title: "Report Submitted Successfully",
-      description: "Your encrypted report has been securely transmitted to compliance officers.",
-    })
-    
-    // Reset form
-    setTitle("")
-    setCategory("")
-    setSeverity("")
-    setDescription("")
-    setEvidence("")
-    setDeadline("")
-    setIsSubmitting(false)
-    onBack()
-  }
+  useEffect(() => {
+    if (isSuccess) {
+      toast({
+        title: "Report Submitted Successfully",
+        description: "Your encrypted report has been securely transmitted to compliance officers.",
+      })
+      
+      // Reset form
+      setTitle("")
+      setCategory("")
+      setSeverity("")
+      setDescription("")
+      setEvidence("")
+      setDeadline("")
+      setIsSubmitting(false)
+      onBack()
+    }
+  }, [isSuccess, toast, onBack])
 
   // Handle transaction error
-  if (error) {
-    toast({
-      title: "Transaction Failed",
-      description: error.message,
-      variant: "destructive"
-    })
-    setIsSubmitting(false)
-  }
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: "Transaction Failed",
+        description: error.message,
+        variant: "destructive"
+      })
+      setIsSubmitting(false)
+    }
+  }, [error, toast])
 
   const isLoading = isPending || isConfirming || isSubmitting
 
@@ -144,8 +171,8 @@ export function ReportForm({ onBack }: ReportFormProps) {
       <Card className="shadow-card bg-gradient-subtle border-security-primary/20">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-security rounded-lg">
-              <Shield className="w-6 h-6 text-primary-foreground" />
+            <div className="p-2 bg-gradient-to-br from-purple-500 via-blue-500 to-green-500 rounded-lg">
+              <Zap className="w-6 h-6 text-white" />
             </div>
             <div>
               <CardTitle className="text-xl">Submit Confidential Report</CardTitle>

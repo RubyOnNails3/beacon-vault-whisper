@@ -1,0 +1,567 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_complianceOfficer",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_chiefInvestigator",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "actionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "reportId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "executor",
+        "type": "address"
+      }
+    ],
+    "name": "ComplianceActionExecuted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "investigationId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "reportId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "isResolved",
+        "type": "bool"
+      }
+    ],
+    "name": "InvestigationCompleted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "investigationId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "reportId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "investigator",
+        "type": "address"
+      }
+    ],
+    "name": "InvestigationStarted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "investigator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint32",
+        "name": "newRating",
+        "type": "uint32"
+      }
+    ],
+    "name": "InvestigatorRatingUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "member",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint32",
+        "name": "newReputation",
+        "type": "uint32"
+      }
+    ],
+    "name": "MemberReputationUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "reportId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "reporter",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint32",
+        "name": "severity",
+        "type": "uint32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint32",
+        "name": "category",
+        "type": "uint32"
+      }
+    ],
+    "name": "ReportSubmitted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "reportId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "isVerified",
+        "type": "bool"
+      }
+    ],
+    "name": "ReportVerified",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_member",
+        "type": "address"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_initialReputation",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_accessLevel",
+        "type": "uint32"
+      }
+    ],
+    "name": "addDAOMember",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_reportId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_actionType",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_severity",
+        "type": "uint32"
+      },
+      {
+        "internalType": "string",
+        "name": "_actionHash",
+        "type": "string"
+      }
+    ],
+    "name": "executeComplianceAction",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_investigationId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getInvestigation",
+    "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "investigationId",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "reportId",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "status",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "priority",
+        "type": "uint32"
+      },
+      {
+        "internalType": "bool",
+        "name": "isActive",
+        "type": "bool"
+      },
+      {
+        "internalType": "string",
+        "name": "findingsHash",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "investigator",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "startTime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "endTime",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_investigator",
+        "type": "address"
+      }
+    ],
+    "name": "getInvestigatorRating",
+    "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "",
+        "type": "uint32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_member",
+        "type": "address"
+      }
+    ],
+    "name": "getMemberReputation",
+    "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "",
+        "type": "uint32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_reportId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getReport",
+    "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "reportId",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "severity",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "category",
+        "type": "uint32"
+      },
+      {
+        "internalType": "bool",
+        "name": "isVerified",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "isProcessed",
+        "type": "bool"
+      },
+      {
+        "internalType": "string",
+        "name": "reportHash",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "reporter",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "assignedInvestigator",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "deadline",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getTotalActions",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getTotalInvestigations",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getTotalReports",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_member",
+        "type": "address"
+      }
+    ],
+    "name": "isVerifiedMember",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_reportId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_investigator",
+        "type": "address"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_priority",
+        "type": "uint32"
+      }
+    ],
+    "name": "startInvestigation",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint32",
+        "name": "_severity",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_category",
+        "type": "uint32"
+      },
+      {
+        "internalType": "string",
+        "name": "_reportHash",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_deadline",
+        "type": "uint256"
+      }
+    ],
+    "name": "submitWhistleblowerReport",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_investigationId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_status",
+        "type": "uint32"
+      },
+      {
+        "internalType": "string",
+        "name": "_findingsHash",
+        "type": "string"
+      }
+    ],
+    "name": "updateInvestigationStatus",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_investigator",
+        "type": "address"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_rating",
+        "type": "uint32"
+      }
+    ],
+    "name": "updateInvestigatorRating",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_reportId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "_isVerified",
+        "type": "bool"
+      }
+    ],
+    "name": "verifyReport",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

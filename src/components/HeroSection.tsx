@@ -1,8 +1,8 @@
-import { Shield, Lock, FileText, Eye, BarChart3, Users, CheckCircle2 } from "lucide-react"
+import { Zap, Lock, FileText, Eye, BarChart3, Users, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { useReadContract } from 'wagmi'
-import { contractConfig } from "@/lib/contracts"
+import { BEACON_VAULT_WHISPER_CONTRACT_ADDRESS, BEACON_VAULT_WHISPER_ABI } from "@/lib/contracts"
 
 interface HeroSectionProps {
   onSubmitReport: () => void
@@ -13,20 +13,20 @@ interface HeroSectionProps {
 export function HeroSection({ onSubmitReport, onViewInbox, isConnected }: HeroSectionProps) {
   // Read contract statistics
   const { data: totalReports } = useReadContract({
-    address: contractConfig.address,
-    abi: contractConfig.abi,
+    address: BEACON_VAULT_WHISPER_CONTRACT_ADDRESS,
+    abi: BEACON_VAULT_WHISPER_ABI,
     functionName: 'getTotalReports',
   })
 
   const { data: totalInvestigations } = useReadContract({
-    address: contractConfig.address,
-    abi: contractConfig.abi,
+    address: BEACON_VAULT_WHISPER_CONTRACT_ADDRESS,
+    abi: BEACON_VAULT_WHISPER_ABI,
     functionName: 'getTotalInvestigations',
   })
 
   const { data: totalActions } = useReadContract({
-    address: contractConfig.address,
-    abi: contractConfig.abi,
+    address: BEACON_VAULT_WHISPER_CONTRACT_ADDRESS,
+    abi: BEACON_VAULT_WHISPER_ABI,
     functionName: 'getTotalActions',
   })
 
@@ -34,7 +34,7 @@ export function HeroSection({ onSubmitReport, onViewInbox, isConnected }: HeroSe
     <section className="py-20 px-4">
       <div className="container mx-auto text-center max-w-4xl">
         <div className="flex items-center justify-center mb-6">
-          <Shield className="w-16 h-16 text-security-primary" />
+          <Zap className="w-16 h-16 text-purple-500" />
         </div>
         
         <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-security-primary to-security-success bg-clip-text text-transparent">
@@ -122,7 +122,7 @@ export function HeroSection({ onSubmitReport, onViewInbox, isConnected }: HeroSe
 
         <div className="grid md:grid-cols-3 gap-8 mt-16 text-left">
           <div className="flex items-start gap-3">
-            <Shield className="w-6 h-6 text-security-primary flex-shrink-0 mt-1" />
+            <Zap className="w-6 h-6 text-purple-500 flex-shrink-0 mt-1" />
             <div>
               <h4 className="font-semibold mb-2">FHE Encryption</h4>
               <p className="text-sm text-muted-foreground">

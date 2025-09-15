@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Eye, Shield, Clock, AlertTriangle, CheckCircle2, User, Calendar } from "lucide-react"
-import { contractConfig, REPORT_CATEGORIES, SEVERITY_LEVELS, INVESTIGATION_STATUS } from "@/lib/contracts"
+import { BEACON_VAULT_WHISPER_CONTRACT_ADDRESS, BEACON_VAULT_WHISPER_ABI, REPORT_CATEGORIES, SEVERITY_LEVELS, INVESTIGATION_STATUS } from "@/lib/contracts"
 import { formatTimestamp } from "@/lib/fhe-utils"
 
 interface ReportItem {
@@ -45,15 +45,15 @@ export function ComplianceInbox({ onBack }: ComplianceInboxProps) {
 
   // Read total reports count
   const { data: totalReports } = useReadContract({
-    address: contractConfig.address,
-    abi: contractConfig.abi,
+    address: BEACON_VAULT_WHISPER_CONTRACT_ADDRESS,
+    abi: BEACON_VAULT_WHISPER_ABI,
     functionName: 'getTotalReports',
   })
 
   // Read total investigations count
   const { data: totalInvestigations } = useReadContract({
-    address: contractConfig.address,
-    abi: contractConfig.abi,
+    address: BEACON_VAULT_WHISPER_CONTRACT_ADDRESS,
+    abi: BEACON_VAULT_WHISPER_ABI,
     functionName: 'getTotalInvestigations',
   })
 

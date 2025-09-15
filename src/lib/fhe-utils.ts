@@ -1,74 +1,134 @@
 // FHE utility functions for Beacon Vault Whisper
 // These functions handle encryption and decryption of sensitive data
+// Note: This is a simplified implementation for demonstration purposes
 
-import { euint32, FHE } from '@fhevm/solidity/lib/FHE.sol'
+import { PublicClient, WalletClient } from 'wagmi'
+import { Chain, HttpTransport } from 'viem'
 
-// Encryption functions
-export const encryptSeverity = (severity: number): euint32 => {
+// Simulated FHE encryption functions
+// In a real implementation, these would use actual FHEVM libraries
+
+// Encryption functions for different data types
+export const encryptSeverity = async (
+  severity: number,
+  walletClient: WalletClient<HttpTransport, Chain> | undefined,
+  publicClient: PublicClient<HttpTransport, Chain> | undefined
+): Promise<string> => {
   if (severity < 1 || severity > 5) {
     throw new Error('Severity must be between 1 and 5')
   }
-  return FHE.asEuint32(severity)
+  
+  // Simulate FHE encryption by creating a hash-based representation
+  const timestamp = Date.now()
+  const randomSalt = Math.random().toString(36).substring(2)
+  const encrypted = btoa(`${severity}-${timestamp}-${randomSalt}`)
+  return `fhe_${encrypted}`
 }
 
-export const encryptCategory = (category: number): euint32 => {
+export const encryptCategory = async (
+  category: number,
+  walletClient: WalletClient<HttpTransport, Chain> | undefined,
+  publicClient: PublicClient<HttpTransport, Chain> | undefined
+): Promise<string> => {
   if (category < 1 || category > 10) {
     throw new Error('Category must be between 1 and 10')
   }
-  return FHE.asEuint32(category)
+  
+  // Simulate FHE encryption by creating a hash-based representation
+  const timestamp = Date.now()
+  const randomSalt = Math.random().toString(36).substring(2)
+  const encrypted = btoa(`${category}-${timestamp}-${randomSalt}`)
+  return `fhe_${encrypted}`
 }
 
-export const encryptPriority = (priority: number): euint32 => {
+export const encryptPriority = async (
+  priority: number,
+  walletClient: WalletClient<HttpTransport, Chain> | undefined,
+  publicClient: PublicClient<HttpTransport, Chain> | undefined
+): Promise<string> => {
   if (priority < 1 || priority > 5) {
     throw new Error('Priority must be between 1 and 5')
   }
-  return FHE.asEuint32(priority)
+  
+  // Simulate FHE encryption by creating a hash-based representation
+  const timestamp = Date.now()
+  const randomSalt = Math.random().toString(36).substring(2)
+  const encrypted = btoa(`${priority}-${timestamp}-${randomSalt}`)
+  return `fhe_${encrypted}`
 }
 
-export const encryptStatus = (status: number): euint32 => {
+export const encryptStatus = async (
+  status: number,
+  walletClient: WalletClient<HttpTransport, Chain> | undefined,
+  publicClient: PublicClient<HttpTransport, Chain> | undefined
+): Promise<string> => {
   if (status < 1 || status > 5) {
     throw new Error('Status must be between 1 and 5')
   }
-  return FHE.asEuint32(status)
+  
+  // Simulate FHE encryption by creating a hash-based representation
+  const timestamp = Date.now()
+  const randomSalt = Math.random().toString(36).substring(2)
+  const encrypted = btoa(`${status}-${timestamp}-${randomSalt}`)
+  return `fhe_${encrypted}`
 }
 
-export const encryptActionType = (actionType: number): euint32 => {
+export const encryptActionType = async (
+  actionType: number,
+  walletClient: WalletClient<HttpTransport, Chain> | undefined,
+  publicClient: PublicClient<HttpTransport, Chain> | undefined
+): Promise<string> => {
   if (actionType < 1 || actionType > 10) {
     throw new Error('Action type must be between 1 and 10')
   }
-  return FHE.asEuint32(actionType)
+  
+  // Simulate FHE encryption by creating a hash-based representation
+  const timestamp = Date.now()
+  const randomSalt = Math.random().toString(36).substring(2)
+  const encrypted = btoa(`${actionType}-${timestamp}-${randomSalt}`)
+  return `fhe_${encrypted}`
 }
 
-export const encryptAccessLevel = (accessLevel: number): euint32 => {
+export const encryptAccessLevel = async (
+  accessLevel: number,
+  walletClient: WalletClient<HttpTransport, Chain> | undefined,
+  publicClient: PublicClient<HttpTransport, Chain> | undefined
+): Promise<string> => {
   if (accessLevel < 1 || accessLevel > 5) {
     throw new Error('Access level must be between 1 and 5')
   }
-  return FHE.asEuint32(accessLevel)
+  
+  // Simulate FHE encryption by creating a hash-based representation
+  const timestamp = Date.now()
+  const randomSalt = Math.random().toString(36).substring(2)
+  const encrypted = btoa(`${accessLevel}-${timestamp}-${randomSalt}`)
+  return `fhe_${encrypted}`
 }
 
-// Decryption functions
-export const decryptSeverity = (encryptedSeverity: euint32): number => {
-  return encryptedSeverity.decrypt()
+// Helper to encrypt a string using simulated FHE
+export const encryptString = async (
+  value: string,
+  walletClient: WalletClient<HttpTransport, Chain> | undefined,
+  publicClient: PublicClient<HttpTransport, Chain> | undefined
+): Promise<string> => {
+  // For string encryption, we'll use a hash-based approach
+  const timestamp = Date.now()
+  const randomSalt = Math.random().toString(36).substring(2)
+  const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value + timestamp + randomSalt))
+  const hashArray = Array.from(new Uint8Array(hash))
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+  return `fhe_${btoa(hashHex)}`
 }
 
-export const decryptCategory = (encryptedCategory: euint32): number => {
-  return encryptedCategory.decrypt()
-}
-
-export const decryptPriority = (encryptedPriority: euint32): number => {
-  return encryptedPriority.decrypt()
-}
-
-export const decryptStatus = (encryptedStatus: euint32): number => {
-  return encryptedStatus.decrypt()
-}
-
-export const decryptActionType = (encryptedActionType: euint32): number => {
-  return encryptedActionType.decrypt()
-}
-
-export const decryptAccessLevel = (encryptedAccessLevel: euint32): number => {
-  return encryptedAccessLevel.decrypt()
+// Helper to decrypt a string using simulated FHE (requires private key, typically done off-chain by authorized parties)
+export const decryptString = async (
+  encryptedValue: string,
+  privateKey: string // This would be the compliance officer's private key
+): Promise<string> => {
+  // This is a placeholder. Actual decryption would involve FHEVM.decrypt with the private key.
+  // For frontend simulation, we might just return a placeholder or require a backend call.
+  console.warn("Decryption on frontend is for simulation only. Real decryption should happen securely off-chain.")
+  return `Decrypted: ${encryptedValue.slice(0, 10)}...`
 }
 
 // Validation functions
